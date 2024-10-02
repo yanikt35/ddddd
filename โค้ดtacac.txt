@@ -1,0 +1,78 @@
+def taco_bar_calculator(num_people, meat_type, selected_vegetables):
+    
+    # Ingredients needed per person (grams)
+    meat_per_person = {
+        "ground beef": 184.0,  
+        "shrimp": 184.0,      
+        "hamburger": 142.0,    
+        "chicken": 156.0,      
+        "pork": 198.0          
+    }
+
+    # Check meat type
+    if meat_type not in meat_per_person:
+        return "Invalid meat type. Please choose from: ground beef, shrimp, hamburger, chicken, pork"
+
+    # Calculate total amounts
+    total_meat_mass = meat_per_person[meat_type] * num_people
+    cheddar_cheese = 35.4 * num_people  
+    monterey_cheese = 21.3 * num_people  
+    sour_cream = 56.7 * num_people  
+    guacamole = 51.0 * num_people  
+    taco_sauce = 65.2 * num_people  
+    pico_de_gallo = 45.4 * num_people   
+    taco_shells = 2 * num_people 
+    tortillas = num_people  
+    rice = 70.9 * num_people  
+
+    # Display results
+    print("\nWelcome to the Taco Bar Calculator!")
+    print(f"Number of people: {num_people}\n")
+    print("🌮 Main ingredients")
+    print(f"Select meat type:\n{meat_type.capitalize()}\nMeat mass: {total_meat_mass:.1f} g\n")
+    print(f"Cheddar cheese: {cheddar_cheese:.1f} g")
+    print(f"Monterey cheese: {monterey_cheese:.2f} g\n")
+
+    print("Pick your dips")
+    print(f"Sour cream: {sour_cream:.1f} g")
+    print(f"Guacamole: {guacamole:.1f} g")
+    print(f"Taco sauce: {taco_sauce:.1f} g")
+    print(f"Pico de Gallo: {pico_de_gallo:.1f} g\n")
+
+    # Pick your vegetables
+    print("Pick your vegetables:")
+    vegetable_choices = {
+        "lettuce": 36.9,  
+        "onions": 25.5,   
+        "beans": 31.2,    
+        "refried beans": 62.4,  
+        "tomatoes": 51.0,  
+        "olives": 22.7,    
+        "bell pepper": 56.7  
+    }
+
+    for vegetable, weight_per_person in vegetable_choices.items():
+        total_weight = weight_per_person * num_people
+        selected = " (selected)" if vegetable in selected_vegetables else ""
+        print(f"{vegetable.capitalize()}: {total_weight:.1f} g{selected}")
+
+    print("\nChoose your side")
+    print(f"Taco shells: {taco_shells} #")
+    print(f"Tortillas: {tortillas} #")
+    print(f"Rice: {rice:.1f} g")
+
+    print ("\nEnjoy your taco bar!")
+    
+# Example usage
+num_people = int(input("Welcome to the Taco Bar Calculator!\nEnter the number of people: "))
+
+# Number of people
+meat_type = input("\nChoose your meat type (ground beef, shrimp, hamburger, chicken, pork): ").lower()
+
+# Prompt user to select vegetables
+print("\nSelect your vegetables (comma-separated): lettuce, onions, beans, refried beans, tomatoes, olives, bell pepper")
+vegetable_input = input("Enter your choices: ").lower()
+selected_vegetables = [veg.strip() for veg in vegetable_input.split(",")]
+
+# Call the calculator
+taco_bar_calculator(num_people, meat_type, selected_vegetables) 
