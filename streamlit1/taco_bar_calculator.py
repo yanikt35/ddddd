@@ -1,6 +1,6 @@
 import streamlit as st
 
-def taco_bar_calculator(meat_type, selected_vegetables):
+def taco_bar_calculator(meat_type, selected_vegetables, selected_sauces):
     # ส่วนผสมที่ต้องการต่อทาโก้ (กรัม) และราคาต่อหน่วย
     meat_per_taco = {
         "ground beef": (92.0, 3.5),  # เนื้อบด (กรัม, ราคาเป็นปอนด์)
@@ -14,7 +14,7 @@ def taco_bar_calculator(meat_type, selected_vegetables):
     if meat_type not in meat_per_taco:
         return "ประเภทเนื้อไม่ถูกต้อง กรุณาเลือกจาก: ground beef, shrimp, hamburger, chicken, pork"
 
-    # คำนวณปริมาณรวมและราคา
+    # คำนวณน้ำหนักรวมและราคา
     meat_weight, meat_price_per_lb = meat_per_taco[meat_type]
     
     # กำหนดส่วนผสมอื่น ๆ และราคาของพวกเขาต่อทาโก้
@@ -23,8 +23,6 @@ def taco_bar_calculator(meat_type, selected_vegetables):
         "monterey cheese": (21.3, 3.0),
         "sour cream": (56.7, 1.5),
         "guacamole": (51.0, 4.0),
-        "taco sauce": (65.2, 2.0),
-        "pico de gallo": (45.4, 3.0),
         "taco shell": (1, 0.5),         # สมมติว่ามีเปลือกทาโก้หนึ่งชิ้นต่อทาโก้
         "tortilla": (1, 0.3)            # สมมติว่ามีแป้งตอร์ติญาหนึ่งชิ้นต่อทาโก้
     }
@@ -38,6 +36,14 @@ def taco_bar_calculator(meat_type, selected_vegetables):
         "tomatoes": (51.0, 1.0),
         "olives": (22.7, 2.0),
         "bell pepper": (56.7, 1.5)
+    }
+
+    # กำหนดซอสและราคาต่อทาโก้
+    sauce_prices = {
+        "taco sauce": (30.0, 2.0),     # (กรัม, ราคาเป็นปอนด์)
+        "hot sauce": (15.0, 2.5),
+        "salsa": (25.0, 3.0),
+        "guacamole sauce": (20.0, 4.0)
     }
 
     # คำนวณราคาสำหรับส่วนผสมอื่น ๆ
@@ -59,8 +65,18 @@ def taco_bar_calculator(meat_type, selected_vegetables):
             vegetable_prices_total[vegetable] = vegetable_price
             total_price += vegetable_price
 
+    # คำนวณราคาสำหรับซอส
+    sauce_prices_total = {}
+    
+    for sauce in selected_sauces:
+        if sauce in sauce_prices:
+            weight, price_per_lb = sauce_prices[sauce]
+            sauce_price = price_per_lb * (weight / 453.592)  # แปลงกรัมเป็นปอนด์สำหรับซอส
+            sauce_prices_total[sauce] = sauce_price
+            total_price += sauce_price
+
     return {
-        'total_weight': sum([meat_weight] + [ingredients[v][0] for v in selected_vegetables]),
+        'total_weight': sum([meat_weight] + [ingredients[v][0] for v in selected_vegetables]) + sum([sauce_prices[s][0] for s in selected_sauces]),
         'total_price': total_price,
         'price_per_taco': total_price   # เนื่องจากเราคำนวณสำหรับหนึ่งทาโก้
     }
@@ -75,9 +91,13 @@ meat_type = st.selectbox("เลือกประเภทเนื้อขอ
 vegetable_options = ["lettuce", "onions", "beans", "refried beans", "tomatoes", "olives", "bell pepper"]
 selected_vegetables = st.multiselect("เลือกผักของคุณ:", options=vegetable_options)
 
+# เลือกซอส
+sauce_options = ["taco sauce", "hot sauce", "salsa", "guacamole sauce"]
+selected_sauces = st.multiselect("เลือกซอสของคุณ:", options=sauce_options)
+
 # ปุ่มคำนวณ
 if st.button("คำนวณ"):
-    results = taco_bar_calculator(meat_type, selected_vegetables)
+    results = taco_bar_calculator(meat_type, selected_vegetables, selected_sauces)
 
     # แสดงผลลัพธ์
     st.subheader("ผลลัพธ์")
