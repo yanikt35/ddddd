@@ -23,8 +23,7 @@ def taco_bar_calculator(meat_type, selected_vegetables, selected_sauces):
         "monterey cheese": (21.3, 3.0),
         "sour cream": (56.7, 1.5),
         "guacamole": (51.0, 4.0),
-        "taco shell": (1, 0.5),         # สมมติว่ามีเปลือกทาโก้หนึ่งชิ้นต่อทาโก้
-        "tortilla": (1, 0.3)            # สมมติว่ามีแป้งตอร์ติญาหนึ่งชิ้นต่อทาโก้
+        
     }
 
     # กำหนดราคาผักต่อทาโก้
@@ -43,7 +42,8 @@ def taco_bar_calculator(meat_type, selected_vegetables, selected_sauces):
         "taco sauce": (30.0, 2.0),     # (กรัม, ราคาเป็นปอนด์)
         "hot sauce": (15.0, 2.5),
         "salsa": (25.0, 3.0),
-        "guacamole sauce": (20.0, 4.0)
+        "guacamole sauce": (20.0, 4.0),
+        "sour cream": (56.7, 1.5),
     }
 
     # คำนวณราคาสำหรับส่วนผสมอื่น ๆ
@@ -56,6 +56,7 @@ def taco_bar_calculator(meat_type, selected_vegetables, selected_sauces):
         total_price += ingredient_price
 
     # คำนวณราคาสำหรับผัก
+    vegetable_price = price_per_lb * (weight / 453.592) 
     vegetable_prices_total = {}
     
     for vegetable in selected_vegetables:
@@ -76,23 +77,27 @@ def taco_bar_calculator(meat_type, selected_vegetables, selected_sauces):
             total_price += sauce_price
 
     return {
-        'total_weight': sum([meat_weight] + [ingredients[v][0] for v in selected_vegetables]) + sum([sauce_prices[s][0] for s in selected_sauces]),
+        'total_weight': sum([meat_weight] + [vegetable_prices[v][0] for v in selected_vegetables]) + sum([sauce_prices[s][0] for s in selected_sauces]),
         'total_price': total_price,
         'price_per_taco': total_price   # เนื่องจากเราคำนวณสำหรับหนึ่งทาโก้
     }
 
 # รูปแบบแอป Streamlit
-st.title("Taco Bar Calculator")
+st.title("Tacos For Amigos")
 
 # เลือกประเภทเนื้อ
 meat_type = st.selectbox("เลือกประเภทเนื้อของคุณ:", options=["ground beef", "shrimp", "hamburger", "chicken", "pork"])
 
+# เลือกtopping
+ingredients_option = ["cheddar cheese","monterey cheese","guacamole"]
+selected_ingredients = st.multiselect("เลือก TOPPING ",options=ingredients_option) 
+       
 # เลือกผัก
 vegetable_options = ["lettuce", "onions", "beans", "refried beans", "tomatoes", "olives", "bell pepper"]
 selected_vegetables = st.multiselect("เลือกผักของคุณ:", options=vegetable_options)
 
 # เลือกซอส
-sauce_options = ["taco sauce", "hot sauce", "salsa", "guacamole sauce"]
+sauce_options = ["taco sauce", "hot sauce", "salsa", "guacamole sauce","sour cream"]
 selected_sauces = st.multiselect("เลือกซอสของคุณ:", options=sauce_options)
 
 # ปุ่มคำนวณ
